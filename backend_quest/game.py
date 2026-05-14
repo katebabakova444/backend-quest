@@ -1,9 +1,9 @@
 from player import Player
 from locations import LOCATIONS
-from actions import travel, rest, study, find_coffee
-from events import EVENTS, trigger_events
 from constants import TRAVEL, REST, STUDY, FIND_COFFEE
 from weather import get_weather, apply_weather_effects
+from engine import GameEngine
+
 
 def show_actions():
     print("\nWhat will you do?"
@@ -12,9 +12,11 @@ def show_actions():
           "\n3. Study"
           "\n4. Find coffee")
 
-def show_final_summary(player, total_locations):
+def show_final_summary(engine):
+    player = engine.player
+
     print("\n===== FINAL SUMMARY =====")
-    print(f"Final status: {player.get_final_status(total_locations)}")
+    print(f"Final status: {engine.get_game_status()}")
     print(f"\nCoffee: {player.coffee}")
     print(f"\nEnergy: {player.energy}")
     print(f"\nKnowledge: {player.knowledge}")
@@ -23,32 +25,20 @@ def show_final_summary(player, total_locations):
     print(f"\nTurns without coffee: {player.turns_without_coffee}")
     print(f"Final score: {player.calculate_score()}")
     print("=============================")
+def show_current_location(engine):
+    location = engine.get_current_location()
+    if location is None:
+        return
+    print(f"Your current location is {location["name"]}. {location["description"]}.")
 
-def apply_location_effects(player, location):
-    for key, value in location["effects"].items():
-        setattr(player, key, getattr(player, key) + value)
-    player.clamp_stats()
-
-def process_location(player, action, location):
-        location_name = location["name"]
-        trigger_events(action, location_name, player)
-
-def update_coffee_turns(player, action):
-    if action != FIND_COFFEE:
-        player.turns_without_coffee += 1
-
-def handle_player_choice(player, choice):
+def handle_player_choice(choice):
     if choice == "1":
-        travel(player)
         return TRAVEL
     elif choice == "2":
-        rest(player)
         return REST
     elif choice == "3":
-        study(player)
         return STUDY
     elif choice == "4":
-        find_coffee(player)
         return FIND_COFFEE
     else:
         return None
@@ -66,31 +56,29 @@ def check_game_end(player, total_locations):
         return True
     return False
 
-def play_game(player, total_locations):
+def play_game(engine):
     while True:
-        if check_game_end(player, total_locations):
+        if engine.is_game_over():
+            show_final_summary(engine)
             break
-        location = LOCATIONS[player.current_location_index]
-        print(f"Your current location is {location["name"]}. {location["description"]}.")
+        show_current_location(engine)
         show_actions()
 
         choice = input("Enter your choice:")
-        action = handle_player_choice(player, choice)
+        action = handle_player_choice(choice)
 
         if action is None:
-            apply_invalid_input_penalty(player)
-            show_stats(player)
+            apply_invalid_input_penalty(engine.player)
+            show_stats(engine.player)
             continue
 
-        update_coffee_turns(player, action)
-        current_location = LOCATIONS[player.current_location_index]
-        process_location(player, action, current_location)
+        turn_result = engine.play_turn(action)
+        if not turn_result:
+            print("\nAction could not be processed.")
+            show_stats(engine.player)
+            continue
 
-        if action == TRAVEL:
-            apply_location_effects(player, current_location)
-            weather = get_weather(current_location["name"])
-            apply_weather_effects(player, weather)
-        show_stats(player)
+        show_stats(engine.player)
 
 def show_stats(player):
     print("\n--- CURRENT STATS ---")
@@ -110,7 +98,7 @@ def apply_invalid_input_penalty(player):
 
 
 if __name__ == "__main__":
-    total_locations = len(LOCATIONS)
     player = Player()
-    play_game(player, total_locations)
+    engine = GameEngine(player, LOCATIONS, len(LOCATIONS))
+    play_game(engine)
 
