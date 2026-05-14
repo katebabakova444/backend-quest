@@ -70,18 +70,32 @@ class GameEngine:
 
     def play_turn(self, action):
         if self.is_game_over():
-            return False
-
+            return {
+                "success": False,
+                "message": "Game is already over.",
+                "action": action,
+                "state": self.get_state()
+            }
         action_processed = self.process_action(action)
         if not action_processed:
             self.apply_invalid_input_penalty()
-            return False
+            return {
+                "success": False,
+                "message": "Invalid action. Penalty applied.",
+                "action": action,
+                "state": self.get_state()
+            }
 
         self.update_coffee_turns(action)
         self.process_events(action)
         self.apply_travel_effects(action)
 
-        return True
+        return {
+            "success": True,
+            "message": "Action processed successfully",
+            "action": action,
+            "state": self.get_state()
+                }
 
     def apply_invalid_input_penalty(self):
         self.player.energy -= 5
@@ -89,6 +103,17 @@ class GameEngine:
         self.player.turns_without_coffee += 1
         self.player.clamp_stats()
 
+    def get_state(self):
+        current_location = self.get_current_location()
+        if current_location:
+            current_location_name = current_location["name"]
+        else:
+            current_location_name = None
+        return {
+            "player": self.player.to_dict(),
+            "location": current_location_name,
+            "status": self.get_game_status(),
+            "game_over": self.is_game_over()
 
-
+        }
 

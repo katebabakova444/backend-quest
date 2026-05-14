@@ -1,7 +1,6 @@
 from player import Player
 from locations import LOCATIONS
 from constants import TRAVEL, REST, STUDY, FIND_COFFEE
-from weather import get_weather, apply_weather_effects
 from engine import GameEngine
 
 
@@ -68,14 +67,15 @@ def play_game(engine):
         action = handle_player_choice(choice)
 
         if action is None:
-            print("\nInvalid choice. You wasted your time and got more stressed.")
+            turn_result = engine.play_turn(None)
+            print(f"\n{turn_result["message"]}")
             engine.apply_invalid_input_penalty()
             show_stats(engine.player)
             continue
 
         turn_result = engine.play_turn(action)
-        if not turn_result:
-            print("\nAction could not be processed.")
+        if not turn_result["success"]:
+            print(f"\n{turn_result["message"]}")
             show_stats(engine.player)
             continue
 
@@ -95,4 +95,3 @@ if __name__ == "__main__":
     player = Player()
     engine = GameEngine(player, LOCATIONS, len(LOCATIONS))
     play_game(engine)
-

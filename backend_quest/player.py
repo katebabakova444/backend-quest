@@ -74,6 +74,16 @@ class Player:
             return "Coffee Crush"
         return "Still On Trail"
 
+    def to_dict(self):
+        return {
+            "energy": self.energy,
+            "coffee": self.coffee,
+            "knowledge": self.knowledge,
+            "money": self.money,
+            "stress": self.stress,
+            "turns_without_coffee": self.turns_without_coffee,
+            "current_location_index": self.current_location_index
+        }
 
 
 
