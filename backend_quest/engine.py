@@ -74,6 +74,7 @@ class GameEngine:
 
         action_processed = self.process_action(action)
         if not action_processed:
+            self.apply_invalid_input_penalty()
             return False
 
         self.update_coffee_turns(action)
@@ -81,6 +82,12 @@ class GameEngine:
         self.apply_travel_effects(action)
 
         return True
+
+    def apply_invalid_input_penalty(self):
+        self.player.energy -= 5
+        self.player.stress += 5
+        self.player.turns_without_coffee += 1
+        self.player.clamp_stats()
 
 
 

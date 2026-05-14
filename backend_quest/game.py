@@ -68,7 +68,8 @@ def play_game(engine):
         action = handle_player_choice(choice)
 
         if action is None:
-            apply_invalid_input_penalty(engine.player)
+            print("\nInvalid choice. You wasted your time and got more stressed.")
+            engine.apply_invalid_input_penalty()
             show_stats(engine.player)
             continue
 
@@ -88,13 +89,6 @@ def show_stats(player):
           f"\nMoney: {player.money}"
           f"\nStress: {player.stress}"
           f"\nTurns without coffee: {player.turns_without_coffee}")
-
-def apply_invalid_input_penalty(player):
-    print("Invalid choice. You wasted your time and got more stressed.")
-    player.energy -= 5
-    player.stress += 5
-    player.turns_without_coffee += 1
-    player.clamp_stats()
 
 
 if __name__ == "__main__":
