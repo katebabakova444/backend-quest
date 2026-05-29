@@ -1,15 +1,17 @@
+from backend_quest.storage import load_player_state
 from player import Player
 from locations import LOCATIONS
-from constants import TRAVEL, REST, STUDY, FIND_COFFEE
+from constants import TRAVEL, REST, STUDY, FIND_COFFEE, SAVE_AND_QUIT
 from engine import GameEngine
-
+from storage import save_player, load_player_state
 
 def show_actions():
     print("\nWhat will you do?"
           "\n1. Travel"
           "\n2. Rest"
           "\n3. Study"
-          "\n4. Find coffee")
+          "\n4. Find coffee"
+          "\n0. Quit and save")
 
 def show_final_summary(engine):
     player = engine.player
@@ -39,6 +41,8 @@ def handle_player_choice(choice):
         return STUDY
     elif choice == "4":
         return FIND_COFFEE
+    elif choice == "0":
+        return SAVE_AND_QUIT
     else:
         return None
 
@@ -65,6 +69,12 @@ def play_game(engine):
 
         choice = input("Enter your choice:")
         action = handle_player_choice(choice)
+        save_player(engine.player.to_dict())
+
+        if action == SAVE_AND_QUIT:
+            save_player(engine.player.to_dict())
+            print("Game saved. See you next time.")
+            break
 
         if action is None:
             turn_result = engine.play_turn(None)
@@ -78,7 +88,7 @@ def play_game(engine):
             print(f"\n{turn_result["message"]}")
             show_stats(engine.player)
             continue
-
+        save_player(engine.player.to_dict())
         show_stats(engine.player)
 
 def show_stats(player):
@@ -92,6 +102,12 @@ def show_stats(player):
 
 
 if __name__ == "__main__":
+    saved_state = load_player_state()
     player = Player()
+    if saved_state is not None:
+        player.load_from_dict(saved_state)
+        print("Saved game loaded.")
+    else:
+        print("New game started.")
     engine = GameEngine(player, LOCATIONS, len(LOCATIONS))
     play_game(engine)

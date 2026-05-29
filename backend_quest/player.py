@@ -84,6 +84,14 @@ class Player:
             "turns_without_coffee": self.turns_without_coffee,
             "current_location_index": self.current_location_index
         }
+    def load_from_dict(self, data):
+        self.energy = data["energy"]
+        self.coffee = data["coffee"]
+        self.knowledge = data["knowledge"]
+        self.money = data["money"]
+        self.stress = data["stress"]
+        self.turns_without_coffee = data["turns_without_coffee"]
+        self.current_location_index = data["current_location_index"]
 
 
 
