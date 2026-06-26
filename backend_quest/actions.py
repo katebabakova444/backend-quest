@@ -1,6 +1,6 @@
-from player import Player
-from locations import LOCATIONS
-from helpers import apply_effects
+from backend_quest.player import Player
+from backend_quest.locations import LOCATIONS
+from backend_quest.helpers import apply_effects
 
 def travel(player):
     print("--- ACTION ---")

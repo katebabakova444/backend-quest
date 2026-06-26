@@ -1,11 +1,11 @@
 
-from player import Player
-from actions import travel, rest, study, find_coffee
-from constants import TRAVEL, REST, STUDY, FIND_COFFEE
-from events import trigger_events
-from weather import get_weather, apply_weather_effects
-from helpers import apply_effects
-from locations import LOCATIONS
+from backend_quest.player import Player
+from backend_quest.actions import travel, rest, study, find_coffee
+from backend_quest.constants import TRAVEL, REST, STUDY, FIND_COFFEE
+from backend_quest.events import trigger_events
+from backend_quest.weather import get_weather, apply_weather_effects
+from backend_quest.helpers import apply_effects
+from backend_quest.locations import LOCATIONS
 
 class GameEngine:
     def __init__(self, player, locations, total_locations):

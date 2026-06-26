@@ -1,6 +1,6 @@
 import os
 import json
-from player import Player
+from backend_quest.player import Player
 SAVE_FILE = "save_data.json"
 
 def save_player(player_state):

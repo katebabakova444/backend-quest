@@ -1,6 +1,6 @@
-from player import Player
-from constants import TRAVEL, REST, STUDY, FIND_COFFEE
-from helpers import apply_effects
+from backend_quest.player import Player
+from backend_quest.constants import TRAVEL, REST, STUDY, FIND_COFFEE
+from backend_quest.helpers import apply_effects
 import random
 
 EVENTS = {

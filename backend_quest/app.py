@@ -1,17 +1,7 @@
-"""
-Future Flask entry point.
-Planned endpoints:
-- GET /state
-- POST /action
-- POST /reset
-
-The Flask API will use GameEngine as the core game logic layer.
-"""
-
 from flask import Flask, jsonify, request
-from engine import GameEngine
-from player import Player
-from locations import LOCATIONS
+from backend_quest.engine import GameEngine
+from backend_quest.player import Player
+from backend_quest.locations import LOCATIONS
 
 app = Flask(__name__)
 player = Player()

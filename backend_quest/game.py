@@ -1,9 +1,9 @@
 from backend_quest.storage import load_player_state
-from player import Player
-from locations import LOCATIONS
-from constants import TRAVEL, REST, STUDY, FIND_COFFEE, SAVE_AND_QUIT
-from engine import GameEngine
-from storage import save_player, load_player_state
+from backend_quest.player import Player
+from backend_quest.locations import LOCATIONS
+from backend_quest.constants import TRAVEL, REST, STUDY, FIND_COFFEE, SAVE_AND_QUIT
+from backend_quest.engine import GameEngine
+from backend_quest.storage import save_player, load_player_state
 
 def show_actions():
     print("\nWhat will you do?"
